@@ -16,5 +16,6 @@ namespace NotatkiWEB.Data
         public DbSet<SubjectList> SubjectList { get; set; }
         public DbSet<SemesterList> SemesterList { get; set; }
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
+        public DbSet<Note> Note { get; set; }
     }
 }

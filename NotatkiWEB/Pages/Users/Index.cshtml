@@ -85,14 +85,14 @@
 }
 
 <ul class="pagination">
-    <li class="@prevDisabled"><a asp-page="./Index" asp-route-pageIndex="@(Model.ApplicationUserList.PageIndex - 1)">&laquo;</a></li>
+    <li class="@prevDisabled"><a asp-page="./Users/Index" asp-route-pageIndex="@(Model.ApplicationUserList.PageIndex - 1)">&laquo;</a></li>
     @for (var i = 1; i <= Model.ApplicationUserList.TotalPages; i++)
     {
         <li class="page-item @(i == Model.ApplicationUserList.PageIndex ? "active" : "")">
-            <a asp-page="/Index" asp-route-currentpage="@i" class="page-link">@i</a>
+            <a asp-page="/Users/Index" asp-route-currentpage="@i" class="page-link">@i</a>
         </li>
     }
-    <li class="@nextDisabled"><a asp-page="./Index" asp-route-pageIndex="@(Model.ApplicationUserList.PageIndex + 1)">&raquo;</a></li>
+    <li class="@nextDisabled"><a asp-page="./Users/Index" asp-route-pageIndex="@(Model.ApplicationUserList.PageIndex + 1)">&raquo;</a></li>
 </ul>
 </div>
 

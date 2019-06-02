@@ -12,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using NotatkiWEB.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using NotatkiWEB.Email;
 
 namespace NotatkiWEB
 {
@@ -41,6 +43,10 @@ namespace NotatkiWEB
                 .AddDefaultTokenProviders()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddSingleton<IEmailSender, EmailSender>();
+            services.Configure<EmailOptions>(Configuration);
+            services.AddAuthentication().AddFacebook(fb => { fb.AppId = "1225446630951290"; fb.AppSecret = "cf077b90b20f2174123e91824502de5d"; });
+            services.AddAuthentication().AddGoogle(go => { go.ClientId = "804393741429-hrbstckhoqmfq1q5v7ot6cirp7b2e93u.apps.googleusercontent.com"; go.ClientSecret = "MXppOFw-tbT0KITTvEjY90uT"; });
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);

@@ -8,7 +8,7 @@
     <title>@ViewData["Title"] - Notatki studenckie</title>
 
     <environment include="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-readable.css" />
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-cosmo.css" />
         <link rel="stylesheet" href="~/css/site.css" />
         <script src="https://kit.fontawesome.com/61820701fb.js"></script>
     </environment>
@@ -36,11 +36,15 @@
                 <ul class="nav navbar-nav">
                     <li><a asp-page="/Index">Strona główna</a></li>
                     <li><a asp-page="/About">O mnie</a></li>
+                    @if (User.IsInRole(SD.StudentEndUser))
+                    {
                     <li><a asp-page="/SubjectsList/Index">Lista przedmiotów</a></li>
+                    }
                     @if (User.IsInRole(SD.AdminEndUser))
                     {
                         <li><a asp-page="/Users/Index">Użytkownicy</a></li>
                     }
+                    <li><a href="https://github.com/Sisimoski/Notatki-studenckie-ASPNET"></a>Pobierz</li>
                 </ul>
                 <partial name="_LoginPartial" />
             </div>
