@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using NotatkiWEB.Data;
+using NotatkiWEB.Models;
+using NotatkiWEB.Utility;
 
 namespace NotatkiWEB.Areas.Identity.Pages.Account
 {
@@ -19,17 +22,23 @@ namespace NotatkiWEB.Areas.Identity.Pages.Account
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ApplicationDbContext _db;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            RoleManager<IdentityRole> roleManager,
+            ApplicationDbContext db)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _db = db;
+            _roleManager = roleManager;
         }
 
         [BindProperty]
@@ -63,6 +72,8 @@ namespace NotatkiWEB.Areas.Identity.Pages.Account
             public string LastName { get; set; }
             [Display(Name = "Uczelnia")]
             public string School { get; set; }
+
+            public bool IsAdmin { get; set; }
         }
 
         public void OnGet(string returnUrl = null)
@@ -75,10 +86,19 @@ namespace NotatkiWEB.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = Input.Email, Email = Input.Email };
+                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, FirstName = Input.FirstName, LastName = Input.LastName, School = Input.School };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
+                    if(!await _roleManager.RoleExistsAsync(SD.AdminEndUser))
+                    {
+                        await _roleManager.CreateAsync(new IdentityRole(SD.AdminEndUser));
+                    }
+                    if (!await _roleManager.RoleExistsAsync(SD.StudentEndUser))
+                    {
+                        await _roleManager.CreateAsync(new IdentityRole(SD.StudentEndUser));
+                    }
+                    await _userManager.AddToRoleAsync(user, SD.AdminEndUser);
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using NotatkiWEB.Utility
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -6,7 +8,7 @@
     <title>@ViewData["Title"] - Notatki studenckie</title>
 
     <environment include="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-darkly.css" />
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-readable.css" />
         <link rel="stylesheet" href="~/css/site.css" />
         <script src="https://kit.fontawesome.com/61820701fb.js"></script>
     </environment>
@@ -35,6 +37,10 @@
                     <li><a asp-page="/Index">Strona główna</a></li>
                     <li><a asp-page="/About">O mnie</a></li>
                     <li><a asp-page="/SubjectsList/Index">Lista przedmiotów</a></li>
+                    @if (User.IsInRole(SD.AdminEndUser))
+                    {
+                        <li><a asp-page="/Users/Index">Użytkownicy</a></li>
+                    }
                 </ul>
                 <partial name="_LoginPartial" />
             </div>

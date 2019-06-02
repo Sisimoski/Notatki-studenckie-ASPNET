@@ -1,0 +1,99 @@
+﻿@page
+@model NotatkiWEB.Pages.Users.IndexModel
+@{
+    ViewData["Title"] = "Użytkownicy";
+}
+
+
+<br />
+
+<div class="row">
+    <div class="col-lg-6">
+        <h2>Lista użytkowników</h2>
+    </div>
+    <div class="col-lg-6 text-right">
+        <a asp-page="/Account/Register" asp-area="Identity" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i>&nbsp;Dodaj nowego użytkownika</a>
+    </div>
+</div>
+
+@if (Model.Message != null)
+{
+    <div class="alert alert-info alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Użytkownik</strong> @Model.Message
+    </div>
+}
+
+<br />
+
+<div>
+    @if (Model.ApplicationUserList.Count == 0)
+    {
+        <p class="text-warning">Brak dostępnych przedmiotów. Kliknij w przycisk 'Dodaj nowego użytkownika', aby dodać nowy przedmiot.</p>
+    }
+    else
+    {
+        <table class="table table-responsive">
+            <thead>
+                <tr class="info">
+                    <th>
+                        @Html.DisplayNameFor(model => model.ApplicationUserList[0].FirstName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ApplicationUserList[0].LastName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ApplicationUserList[0].Email)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ApplicationUserList[0].School)
+                    </th>
+                    <th>
+                        Edycja
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ApplicationUserList)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FirstName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LastName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.School)
+                        </td>
+                        <td>
+                            <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-info btn-xs">Edit</a>
+                            <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-danger btn-xs">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+@{
+    var prevDisabled = !Model.ApplicationUserList.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.ApplicationUserList.HasNextPage ? "disabled" : "";
+}
+
+<ul class="pagination">
+    <li class="@prevDisabled"><a asp-page="./Index" asp-route-pageIndex="@(Model.ApplicationUserList.PageIndex - 1)">&laquo;</a></li>
+    @for (var i = 1; i <= Model.ApplicationUserList.TotalPages; i++)
+    {
+        <li class="page-item @(i == Model.ApplicationUserList.PageIndex ? "active" : "")">
+            <a asp-page="/Index" asp-route-currentpage="@i" class="page-link">@i</a>
+        </li>
+    }
+    <li class="@nextDisabled"><a asp-page="./Index" asp-route-pageIndex="@(Model.ApplicationUserList.PageIndex + 1)">&raquo;</a></li>
+</ul>
+</div>
+
+

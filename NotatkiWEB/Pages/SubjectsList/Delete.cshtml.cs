@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using NotatkiWEB.Data;
 using NotatkiWEB.Models;
+using NotatkiWEB.Utility;
 
 namespace NotatkiWEB.Pages.SubjectsList
 {
+    [Authorize(Roles = SD.AdminEndUser)]
     public class DeleteModel : PageModel
     {
         private readonly NotatkiWEB.Data.ApplicationDbContext _context;

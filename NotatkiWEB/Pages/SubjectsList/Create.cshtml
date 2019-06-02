@@ -14,12 +14,12 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label class="control-label">Przedmiot:</label>
+                <label asp-for="SubjectList.SubjectName" class="control-label"></label>
                 <input asp-for="SubjectList.SubjectName" class="form-control" placeholder="Wprowadź nazwę przemiotu..."/>
                 <span asp-validation-for="SubjectList.SubjectName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label class="control-label">Semestr:</label>
+                <label asp-for="SubjectList.IDSemester" class="control-label"></label>
                 <select asp-for="SubjectList.IDSemester" class ="form-control" asp-items="ViewBag.IDSemester"></select>
             </div>
             <div class="form-group">
