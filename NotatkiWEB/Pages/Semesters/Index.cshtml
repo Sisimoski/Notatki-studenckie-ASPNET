@@ -1,0 +1,84 @@
+﻿@page
+@model NotatkiWEB.Pages.Semesters.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<br/>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <h2>Lista semestrów</h2>
+        </div>
+        <div class="col-lg-6 text-right">
+            <a asp-page="Create" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i>&nbsp;Dodaj nowy semestr</a>
+        </div>
+    </div>
+
+<br/>
+
+<div>
+    @if (Model.SemesterList.Count == 0)
+    {
+        <p class="text-warning">Brak dostępnych semestrów. Kliknij w przycisk 'Dodaj nowy semestr', aby dodać nowy semestr.</p>
+    }
+    else
+    {
+        <form asp-page="./Index" method="get">
+            <div class="form-actions">
+                <p>
+                    Szukaj przedmiotu:
+                    <input type="text" class="form-control" name="SearchString" value="@Model.CurrentFilter" placeholder="Szukaj..." />
+                    <input type="submit" value="Szukaj" class="btn btn-info" />|
+                    <a class="btn btn-default" asp-page="./Index">Wróć do pełnej listy</a>
+                </p>
+            </div>
+        </form>
+        <table class="table">
+            <thead>
+                <tr class="info">
+                    <th>
+                        <a asp-page="./Index" asp-route-sortOrder="@Model.SemesterSort" asp-route-currentFilter="@Model.CurrentFilter">
+                            @Html.DisplayNameFor(model => model.SemesterList[0].SemesterName)
+                        </a>
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.SemesterList)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SemesterName)
+                        </td>
+                        <td>
+                            <a asp-page="./Edit" asp-route-id="@item.IDSemester" class="btn btn-default btn-xs">Edytuj</a> |
+                            <a asp-page="./Details" asp-route-id="@item.IDSemester" class="btn btn-info btn-xs">Szczegóły</a> |
+                            <a asp-page="./Delete" asp-route-id="@item.IDSemester" class="btn btn-danger btn-xs">Usuń</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    @{
+        var prevDisabled = !Model.SemesterList.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.SemesterList.HasNextPage ? "disabled" : "";
+    }
+
+<ul class="pagination">
+    <li class="@prevDisabled"><a asp-page="./Index" asp-route-sortOrder="@Model.CurrentSort" asp-route-pageIndex="@(Model.SemesterList.PageIndex - 1)" asp-route-currentFilter="@Model.CurrentFilter">&laquo;</a></li>
+    @for (var i = 1; i <= Model.SemesterList.TotalPages; i++)
+    {
+        <li class="page-item @(i == Model.SemesterList.PageIndex ? "active" : "")">
+            <a asp-page="./Index" asp-route-sortOrder="@Model.CurrentSort" asp-route-pageIndex="@i" asp-route-currentFilter="@Model.CurrentFilter" class="page-link">@i</a>
+        </li>
+    }
+    <li class="@nextDisabled"><a asp-page="./Index" asp-route-sortOrder="@Model.CurrentSort" asp-route-pageIndex="@(Model.SemesterList.PageIndex + 1)" asp-route-currentFilter="@Model.CurrentFilter">&raquo;</a></li>
+</ul>
+</div>
+
+
+

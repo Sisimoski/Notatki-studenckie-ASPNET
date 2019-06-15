@@ -200,6 +200,10 @@ namespace NotatkiWEB.Data.Migrations
                     b.Property<string>("NoteContent")
                         .IsRequired();
 
+                    b.Property<string>("NoteFileCaption");
+
+                    b.Property<string>("NoteFileURL");
+
                     b.Property<string>("Title")
                         .IsRequired();
 

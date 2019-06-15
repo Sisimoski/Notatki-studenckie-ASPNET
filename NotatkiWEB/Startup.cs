@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using NotatkiWEB.Email;
+using ReflectionIT.Mvc.Paging;
 
 namespace NotatkiWEB
 {
@@ -36,6 +37,7 @@ namespace NotatkiWEB
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddScoped<IDbInitializer, DbInitializer>();
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
@@ -50,10 +52,11 @@ namespace NotatkiWEB
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddPaging();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDbInitializer dbInitializer)
         {
             if (env.IsDevelopment())
             {
@@ -65,7 +68,7 @@ namespace NotatkiWEB
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
-
+            dbInitializer.Initialize();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();

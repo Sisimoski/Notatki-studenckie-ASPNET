@@ -29,24 +29,42 @@
 <div>
     @if (Model.ApplicationUserList.Count == 0)
     {
-        <p class="text-warning">Brak dostępnych przedmiotów. Kliknij w przycisk 'Dodaj nowego użytkownika', aby dodać nowy przedmiot.</p>
+        <p class="text-warning">Brak dostępnych użytkowników. Kliknij w przycisk 'Dodaj nowego użytkownika', aby dodać nowy przedmiot.</p>
     }
     else
     {
+        <form asp-page="./Index" method="get">
+            <div class="form-actions">
+                <p>
+                    Szukaj użytkownika:
+                    <input type="text" class="form-control" name="SearchString" value="@Model.CurrentFilter" placeholder="Szukaj..." />
+                    <input type="submit" value="Szukaj" class="btn btn-info" />|
+                    <a class="btn btn-default" asp-page="./Index">Wróć do pełnej listy</a>
+                </p>
+            </div>
+        </form>
         <table class="table table-responsive">
             <thead>
                 <tr class="info">
                     <th>
-                        @Html.DisplayNameFor(model => model.ApplicationUserList[0].FirstName)
+                        <a asp-page="./Index" asp-route-sortOrder="@Model.FirstNameSort" asp-route-currentFilter="@Model.CurrentFilter">
+                            @Html.DisplayNameFor(model => model.ApplicationUserList[0].FirstName)
+                        </a>
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.ApplicationUserList[0].LastName)
+                        <a asp-page="./Index" asp-route-sortOrder="@Model.LastNameSort" asp-route-currentFilter="@Model.CurrentFilter">
+                            @Html.DisplayNameFor(model => model.ApplicationUserList[0].LastName)
+                        </a>
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.ApplicationUserList[0].Email)
+                        <a asp-page="./Index" asp-route-sortOrder="@Model.EmailSort" asp-route-currentFilter="@Model.CurrentFilter">
+                            @Html.DisplayNameFor(model => model.ApplicationUserList[0].Email)
+                        </a>
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.ApplicationUserList[0].School)
+                        <a asp-page="./Index" asp-route-sortOrder="@Model.SchoolSort" asp-route-currentFilter="@Model.CurrentFilter">
+                            @Html.DisplayNameFor(model => model.ApplicationUserList[0].School)
+                        </a>
                     </th>
                     <th>
                         Edycja
@@ -70,8 +88,8 @@
                             @Html.DisplayFor(modelItem => item.School)
                         </td>
                         <td>
-                            <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-info btn-xs">Edit</a>
-                            <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-danger btn-xs">Delete</a>
+                            <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-default btn-xs">Edytuj</a>
+                            <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-danger btn-xs">Usuń</a>
                         </td>
                     </tr>
                 }
@@ -79,21 +97,21 @@
         </table>
     }
 
-@{
-    var prevDisabled = !Model.ApplicationUserList.HasPreviousPage ? "disabled" : "";
-    var nextDisabled = !Model.ApplicationUserList.HasNextPage ? "disabled" : "";
-}
-
-<ul class="pagination">
-    <li class="@prevDisabled"><a asp-page="./Users/Index" asp-route-pageIndex="@(Model.ApplicationUserList.PageIndex - 1)">&laquo;</a></li>
-    @for (var i = 1; i <= Model.ApplicationUserList.TotalPages; i++)
-    {
-        <li class="page-item @(i == Model.ApplicationUserList.PageIndex ? "active" : "")">
-            <a asp-page="/Users/Index" asp-route-currentpage="@i" class="page-link">@i</a>
-        </li>
+    @{
+        var prevDisabled = !Model.ApplicationUserList.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.ApplicationUserList.HasNextPage ? "disabled" : "";
     }
-    <li class="@nextDisabled"><a asp-page="./Users/Index" asp-route-pageIndex="@(Model.ApplicationUserList.PageIndex + 1)">&raquo;</a></li>
-</ul>
+
+    <ul class="pagination">
+        <li class="@prevDisabled"><a asp-page="./Index" asp-route-sortOrder="@Model.CurrentSort" asp-route-pageIndex="@(Model.ApplicationUserList.PageIndex - 1)" asp-route-currentFilter="@Model.CurrentFilter">&laquo;</a></li>
+        @for (var i = 1; i <= Model.ApplicationUserList.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.ApplicationUserList.PageIndex ? "active" : "")">
+                <a asp-page="./Index" asp-route-sortOrder="@Model.CurrentSort" asp-route-pageIndex="@i" asp-route-currentFilter="@Model.CurrentFilter" class="page-link">@i</a>
+            </li>
+        }
+        <li class="@nextDisabled"><a asp-page="./Index" asp-route-sortOrder="@Model.CurrentSort" asp-route-pageIndex="@(Model.ApplicationUserList.PageIndex + 1)" asp-route-currentFilter="@Model.CurrentFilter">&raquo;</a></li>
+    </ul>
 </div>
 
 

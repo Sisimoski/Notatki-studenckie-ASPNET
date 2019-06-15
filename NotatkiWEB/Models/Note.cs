@@ -21,12 +21,19 @@ namespace NotatkiWEB.Models
         [Display(Name = "Treść notatki")]
         public string NoteContent { get; set; }
 
+        [Display(Name = "Lokalizacja pliku")]
+        public string NoteFileURL { get; set; }
+        [Display(Name = "Opis pliku")]
+        public string NoteFileCaption { get; set; }
+
         public string UserId { get; set; }
         [ForeignKey("UserId")]
         public virtual ApplicationUser ApplicationUser { get; set; }
 
+        [Display(Name = "Wybierz przedmiot:")]
         public int IDSubject { get; set; }
         [ForeignKey("IDSubject")]
+        [Display(Name = "Przedmiot")]
         public virtual SubjectList SubjectList { get; set; }
     }
 }
