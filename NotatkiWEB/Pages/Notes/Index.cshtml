@@ -1,0 +1,119 @@
+﻿@page
+@model NotatkiWEB.Pages.Notes.IndexModel
+
+@{
+    ViewData["Title"] = "Notatki";
+}
+
+<br />
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+<div class="row">
+    <div class="col-lg-6">
+        <h2>Notatki</h2>
+    </div>
+    <div class="col-lg-6 text-right">
+        <a asp-page="Create" asp-route-userId="@Model.UserVM.UserObj.Id" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i>&nbsp;Dodaj nową notatkę</a>
+    </div>
+</div>
+
+<div>
+    @if (Model.Note.Count == 0)
+    {
+        <p class="text-warning">Brak notatek. Kliknij w przycisk 'Dodaj nową notatkę', aby dodać nową notatkę.</p>
+    }
+    else
+    {
+        <form asp-page="./Index" method="get">
+            <div class="form-actions">
+                <p>
+                    Szukaj przedmiotu:
+                    <input type="text" class="form-control" name="SearchString" value="@Model.CurrentFilter" placeholder="Szukaj..." />
+                    <input type="submit" value="Szukaj" class="btn btn-info" />|
+                    <a class="btn btn-default" asp-page="./Index">Wróć do pełnej listy</a>
+                </p>
+            </div>
+        </form>
+        <table class="table table-responsive">
+            <thead>
+                <tr class="info">
+                    <th>
+                        <a asp-page="./Index" asp-route-sortOrder="@Model.TitleSort" asp-route-currentFilter="@Model.CurrentFilter">
+                            @Html.DisplayNameFor(model => model.Note[0].Title)
+                        </a>
+                    </th>
+                    <th>
+                        <a asp-page="./Index" asp-route-sortOrder="@Model.SubjectSort" asp-route-currentFilter="@Model.CurrentFilter">
+                            @Html.DisplayNameFor(model => model.Note[0].SubjectList)
+                        </a>
+                    </th>
+                    <th>
+                        <a asp-page="./Index" asp-route-sortOrder="@Model.FirstNameSort" asp-route-currentFilter="@Model.CurrentFilter">
+                            @Html.DisplayNameFor(model => model.Note[0].ApplicationUser.FirstName)
+                        </a>
+                    </th>
+                    <th>
+                        <a asp-page="./Index" asp-route-sortOrder="@Model.LastNameSort" asp-route-currentFilter="@Model.CurrentFilter">
+                            @Html.DisplayNameFor(model => model.Note[0].ApplicationUser.LastName)
+                        </a>
+                    </th>
+                    <th>
+                        <a asp-page="./Index" asp-route-sortOrder="@Model.SchoolSort" asp-route-currentFilter="@Model.CurrentFilter">
+                            @Html.DisplayNameFor(model => model.Note[0].ApplicationUser.School)
+                        </a>
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Note)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SubjectList.SubjectName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ApplicationUser.FirstName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ApplicationUser.LastName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ApplicationUser.School)
+                        </td>
+                        <td>
+                            @if (User.Identity.Name == item.ApplicationUser.UserName)
+                            {
+                                <a asp-page="./Edit" asp-route-id="@item.IDNote" class="btn btn-default btn-xs">Edytuj</a>
+                            }
+                            <a asp-page="./Details" asp-route-id="@item.IDNote" class="btn btn-info btn-xs">Szczegóły</a>
+                            @if (User.Identity.Name == item.ApplicationUser.UserName)
+                            {
+                                <a asp-page="./Delete" asp-route-id="@item.IDNote" class="btn btn-danger btn-xs">Usuń</a>
+                            }
+                            </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    @{
+        var prevDisabled = !Model.Note.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.Note.HasNextPage ? "disabled" : "";
+    }
+
+<ul class="pagination">
+    <li class="@prevDisabled"><a asp-page="./Index" asp-route-sortOrder="@Model.CurrentSort" asp-route-pageIndex="@(Model.Note.PageIndex - 1)" asp-route-currentFilter="@Model.CurrentFilter">&laquo;</a></li>
+    @for (var i = 1; i <= Model.Note.TotalPages; i++)
+    {
+        <li class="page-item @(i == Model.Note.PageIndex ? "active" : "")">
+            <a asp-page="./Index" asp-route-sortOrder="@Model.CurrentSort" asp-route-pageIndex="@i" asp-route-currentFilter="@Model.CurrentFilter" class="page-link">@i</a>
+        </li>
+    }
+    <li class="@nextDisabled"><a asp-page="./Index" asp-route-sortOrder="@Model.CurrentSort" asp-route-pageIndex="@(Model.Note.PageIndex + 1)" asp-route-currentFilter="@Model.CurrentFilter">&raquo;</a></li>
+</ul>
+</div>
+
+

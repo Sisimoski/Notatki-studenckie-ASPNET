@@ -12,6 +12,9 @@ using Microsoft.EntityFrameworkCore;
 using NotatkiWEB.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using NotatkiWEB.Email;
+using ReflectionIT.Mvc.Paging;
 
 namespace NotatkiWEB
 {
@@ -34,6 +37,7 @@ namespace NotatkiWEB
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddScoped<IDbInitializer, DbInitializer>();
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
@@ -41,13 +45,18 @@ namespace NotatkiWEB
                 .AddDefaultTokenProviders()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddSingleton<IEmailSender, EmailSender>();
+            services.Configure<EmailOptions>(Configuration);
+            services.AddAuthentication().AddFacebook(fb => { fb.AppId = "1225446630951290"; fb.AppSecret = "cf077b90b20f2174123e91824502de5d"; });
+            services.AddAuthentication().AddGoogle(go => { go.ClientId = "804393741429-hrbstckhoqmfq1q5v7ot6cirp7b2e93u.apps.googleusercontent.com"; go.ClientSecret = "MXppOFw-tbT0KITTvEjY90uT"; });
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddPaging();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDbInitializer dbInitializer)
         {
             if (env.IsDevelopment())
             {
@@ -59,7 +68,7 @@ namespace NotatkiWEB
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
-
+            dbInitializer.Initialize();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();

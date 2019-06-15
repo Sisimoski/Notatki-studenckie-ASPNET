@@ -15,8 +15,10 @@ namespace NotatkiWEB.Models
         [DataType(DataType.Text)]
         [Display(Name = "Przedmiot")]
         public string SubjectName { get; set; }
+        [Display(Name = "Semestr")]
         public int IDSemester { get; set; }
         [ForeignKey("IDSemester")]
+        [Display(Name = "Semestr")]
         public virtual SemesterList SemesterList { get; set; }
     }
 }

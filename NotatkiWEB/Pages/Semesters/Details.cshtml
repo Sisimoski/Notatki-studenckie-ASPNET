@@ -1,0 +1,25 @@
+﻿@page
+@model NotatkiWEB.Pages.Semesters.DetailsModel
+
+@{
+    ViewData["Title"] = "Szczegóły";
+}
+
+<h2>Szczegóły</h2>
+
+<div>
+    <h4>Lista semestrów</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.SemesterList.SemesterName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SemesterList.SemesterName)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.SemesterList.IDSemester">Edytuj</a> |
+    <a asp-page="./Index">Wróć do lisy</a>
+</div>

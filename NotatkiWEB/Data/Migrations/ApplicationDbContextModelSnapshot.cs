@@ -15,7 +15,7 @@ namespace NotatkiWEB.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
+                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -189,6 +189,35 @@ namespace NotatkiWEB.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("NotatkiWEB.Models.Note", b =>
+                {
+                    b.Property<int>("IDNote")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("IDSubject");
+
+                    b.Property<string>("NoteContent")
+                        .IsRequired();
+
+                    b.Property<string>("NoteFileCaption");
+
+                    b.Property<string>("NoteFileURL");
+
+                    b.Property<string>("Title")
+                        .IsRequired();
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("IDNote");
+
+                    b.HasIndex("IDSubject");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Note");
+                });
+
             modelBuilder.Entity("NotatkiWEB.Models.SemesterList", b =>
                 {
                     b.Property<int>("IDSemester")
@@ -225,13 +254,14 @@ namespace NotatkiWEB.Data.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
-                    b.Property<string>("FirstName");
+                    b.Property<string>("FirstName")
+                        .IsRequired();
 
-                    b.Property<string>("LastName");
+                    b.Property<string>("LastName")
+                        .IsRequired();
 
-                    b.Property<string>("School");
-
-                    b.ToTable("ApplicationUser");
+                    b.Property<string>("School")
+                        .IsRequired();
 
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
@@ -279,6 +309,18 @@ namespace NotatkiWEB.Data.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("NotatkiWEB.Models.Note", b =>
+                {
+                    b.HasOne("NotatkiWEB.Models.SubjectList", "SubjectList")
+                        .WithMany()
+                        .HasForeignKey("IDSubject")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("NotatkiWEB.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("NotatkiWEB.Models.SubjectList", b =>

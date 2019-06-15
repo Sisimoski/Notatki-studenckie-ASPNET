@@ -1,0 +1,28 @@
+﻿@page
+@model NotatkiWEB.Pages.Semesters.DeleteModel
+
+@{
+    ViewData["Title"] = "Usuń";
+}
+
+<h2>Usuń</h2>
+
+<h3>Napewno chcesz usunąć semestr?</h3>
+<div>
+    <h4>SemesterList</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.SemesterList.SemesterName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SemesterList.SemesterName)
+        </dd>
+    </dl>
+    
+    <form method="post">
+        <input type="hidden" asp-for="SemesterList.IDSemester" />
+        <input type="submit" value="Usuń" class="btn btn-default" /> |
+        <a asp-page="./Index">Wróć do listy</a>
+    </form>
+</div>

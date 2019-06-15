@@ -6,7 +6,7 @@
 }
 
 
-<br/>
+<br />
 
 <div class="row">
     <div class="col-lg-6">
@@ -17,15 +17,15 @@
     </div>
 </div>
 
-@if(Model.Message != null)
+@if (Model.Message != null)
 {
-<div class="alert alert-info alert-dismissible" role="alert">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
-    <strong>Przedmiot</strong> @Model.Message
-</div>
+    <div class="alert alert-info alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Przedmiot</strong> @Model.Message
+    </div>
 }
 
-<br/>
+<br />
 
 <div>
     @if (Model.SubjectList.Count == 0)
@@ -34,16 +34,26 @@
     }
     else
     {
+        <form asp-page="./Index" method="get">
+            <div class="form-actions">
+                <p>
+                    Szukaj przedmiotu:
+                    <input type="text" class="form-control" name="SearchString" value="@Model.CurrentFilter" placeholder="Szukaj..."/>
+                    <input type="submit" value="Szukaj" class="btn btn-info"/>|
+                    <a class="btn btn-default" asp-page="./Index">Wróć do pełnej listy</a>
+                </p>
+            </div>
+        </form>
         <table class="table table-responsive">
             <thead>
                 <tr class="info">
                     <th>
-                        <a asp-page="./Index" asp-route-sortOrder="@Model.SubjectSort">
+                        <a asp-page="./Index" asp-route-sortOrder="@Model.SubjectSort" asp-route-currentFilter="@Model.CurrentFilter">
                             @Html.DisplayNameFor(model => model.SubjectList[0].SubjectName)
                         </a>
                     </th>
                     <th>
-                        <a asp-page="./Index" asp-route-sortOrder="@Model.SemesterSort">
+                        <a asp-page="./Index" asp-route-sortOrder="@Model.SemesterSort" asp-route-currentFilter="@Model.CurrentFilter">
                             @Html.DisplayNameFor(model => model.SubjectList[0].SemesterList)
                         </a>
                     </th>
@@ -63,12 +73,27 @@
                             @Html.DisplayFor(modelItem => item.SemesterList.SemesterName)
                         </td>
                         <td>
-                            <a asp-page="./Edit" asp-route-id="@item.IDSubject" class="btn btn-info btn-xs">Edit</a>
-                            <a asp-page="./Delete" asp-route-id="@item.IDSubject" class="btn btn-danger btn-xs">Delete</a>
+                            <a asp-page="./Edit" asp-route-id="@item.IDSubject" class="btn btn-info btn-xs">Edytuj</a>
+                            <a asp-page="./Delete" asp-route-id="@item.IDSubject" class="btn btn-danger btn-xs">Usuń</a>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
     }
+    @{
+        var prevDisabled = !Model.SubjectList.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.SubjectList.HasNextPage ? "disabled" : "";
+    }
+
+    <ul class="pagination">
+        <li class="@prevDisabled"><a asp-page="./Index" asp-route-sortOrder="@Model.CurrentSort" asp-route-pageIndex="@(Model.SubjectList.PageIndex - 1)" asp-route-currentFilter="@Model.CurrentFilter">&laquo;</a></li>
+        @for (var i = 1; i <= Model.SubjectList.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.SubjectList.PageIndex ? "active" : "")">
+                <a asp-page="./Index" asp-route-sortOrder="@Model.CurrentSort" asp-route-pageIndex="@i" asp-route-currentFilter="@Model.CurrentFilter" class="page-link">@i</a>
+            </li>
+        }
+        <li class="@nextDisabled"><a asp-page="./Index" asp-route-sortOrder="@Model.CurrentSort" asp-route-pageIndex="@(Model.SubjectList.PageIndex + 1)" asp-route-currentFilter="@Model.CurrentFilter">&raquo;</a></li>
+    </ul>
 </div>

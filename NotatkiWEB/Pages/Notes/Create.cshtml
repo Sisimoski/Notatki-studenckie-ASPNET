@@ -1,0 +1,50 @@
+﻿@page
+@model NotatkiWEB.Pages.Notes.CreateModel
+
+@{
+    ViewData["Title"] = "Nowa notatka";
+}
+
+<h1>Utwórz nową notatkę</h1>
+
+<h4>Notatka</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="Note.UserId" type="hidden" />
+            <div class="form-group">
+
+                <label asp-for="Note.Title" class="control-label"></label>
+                <input asp-for="Note.Title" class="form-control" />
+                <span asp-validation-for="Note.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Note.NoteContent" class="control-label"></label>
+                <textarea asp-for="Note.NoteContent" class="form-control" rows="8"></textarea>
+                <span asp-validation-for="Note.NoteContent" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Note.IDSubject" class="control-label"></label>
+                <select asp-for="Note.IDSubject" class="form-control" asp-items="ViewBag.IDSubject"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="NoteFile" class="control-label"></label>
+                <input type="file" asp-for="NoteFile" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Dodaj" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Wróć do listy</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
